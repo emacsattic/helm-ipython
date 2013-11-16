@@ -39,8 +39,9 @@
   (condition-case nil
       (with-helm-current-buffer
         (python-shell-completion-get-completions
-         helm-pattern (python-shell-get-process)
-         python-shell-completion-string-code))
+         (python-shell-get-process)
+         python-shell-completion-string-code
+         helm-pattern))
     (error nil)))
 
 (defun helm-ipyton-default-action (elm)
