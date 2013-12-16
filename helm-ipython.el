@@ -31,7 +31,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 (require 'python)
 (require 'helm-elisp) ; For `with-helm-show-completion'
 
@@ -70,9 +70,13 @@
   "Preconfigured helm for ipython completions."
   (interactive)
   (delete-other-windows)
-  (let ((initial-pattern (helm-ipython-get-initial-pattern)))
+  (let ((initial-pattern (helm-ipython-get-initial-pattern))
+        (helm-execute-action-at-once-if-one t)
+        (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
     (with-helm-show-completion (- (point) (length initial-pattern)) (point)
-      (helm 'helm-source-ipython initial-pattern))))
+      (helm :sources 'helm-source-ipython
+            :input initial-pattern
+            :buffer "*helm ipython*"))))
 
 (defun helm-ipython-import-modules-from-buffer ()
   "Allow user to execute only the import lines of the current *.py file."
