@@ -87,9 +87,9 @@
       (catch 'break
         (while (not (eobp))
           (catch 'continue
-            (if (re-search-forward "^import .*" (point-max) t)
+            (if (re-search-forward "^\\s-*\\(import\\|from\\)" (point-max) t)
                 (progn
-                  (sit-for 0.5)
+                  (sit-for 0.1)
                   (python-shell-send-region (point-at-bol) (point-at-eol))
                   (throw 'continue nil))
                 (throw 'break nil)))))))
