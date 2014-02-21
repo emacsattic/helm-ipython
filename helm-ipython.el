@@ -35,6 +35,8 @@
 (require 'python)
 (require 'helm-elisp) ; For `with-helm-show-completion'
 
+(defvar helm-ipython-help-buffer "*helm ipython help*")
+
 (defun helm-ipython-completion-list (pattern)
   (condition-case nil
       (with-helm-current-buffer
@@ -55,8 +57,26 @@
     (candidates . (lambda ()
                     (helm-ipython-completion-list helm-pattern)))
     (action . helm-ipyton-default-action)
+    (persistent-action . helm-ipython-help)
+    (persistent-help . "Get info on object")
     (volatile)
     (requires-pattern . 2)))
+
+(defun helm-ipython-docstring (candidate)
+  (with-helm-current-buffer
+    (python-shell-send-string-no-output
+     (format "help(\"%s\")" candidate))))
+
+(defun helm-ipython-help (candidate)
+  (if (and (get-buffer-window helm-ipython-help-buffer 'visible)
+           (string= candidate help-cand))
+      (kill-buffer helm-ipython-help-buffer)
+      (let ((doc (helm-ipython-docstring candidate)))
+        (with-current-buffer (get-buffer-create helm-ipython-help-buffer)
+          (erase-buffer)
+          (save-excursion (insert doc))
+          (setq help-cand candidate)
+          (display-buffer (current-buffer))))))
 
 (defun helm-ipython-get-initial-pattern ()
   "Get the pattern to complete from."
@@ -72,6 +92,7 @@
   (delete-other-windows)
   (let ((initial-pattern (helm-ipython-get-initial-pattern))
         (helm-execute-action-at-once-if-one t)
+        help-cand
         (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
     (with-helm-show-completion (- (point) (length initial-pattern)) (point)
       (helm :sources 'helm-source-ipython
