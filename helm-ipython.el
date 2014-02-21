@@ -1,4 +1,4 @@
-;;; helm-ipython.el --- python completion using ipython and helm. 
+;;; helm-ipython.el --- python completion using ipython and helm. -*- lexical-binding: t -*-
 
 ;; Copyright (C) <Thierry Volpiatto>thierry.volpiatto@gmail.com
 
@@ -43,7 +43,7 @@
         (python-shell-completion-get-completions
          (python-shell-get-process)
          python-shell-completion-string-code
-         helm-pattern))
+         pattern))
     (error nil)))
 
 (defun helm-ipyton-default-action (elm)
