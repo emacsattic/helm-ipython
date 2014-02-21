@@ -67,15 +67,20 @@
     (python-shell-send-string-no-output
      (format "help(\"%s\")" candidate))))
 
+;; Internal
+(defvar helm-ipython--last-help-candidate nil)
+(make-local-variable 'helm-ipython--last-help-candidate)
+
 (defun helm-ipython-help (candidate)
   (if (and (get-buffer-window helm-ipython-help-buffer 'visible)
-           (string= candidate help-cand))
+           helm-ipython--last-help-candidate
+           (string= candidate helm-ipython--last-help-candidate))
       (kill-buffer helm-ipython-help-buffer)
       (let ((doc (helm-ipython-docstring candidate)))
         (with-current-buffer (get-buffer-create helm-ipython-help-buffer)
           (erase-buffer)
           (save-excursion (insert doc))
-          (setq help-cand candidate)
+          (setq helm-ipython--last-help-candidate candidate)
           (display-buffer (current-buffer))))))
 
 (defun helm-ipython-get-initial-pattern ()
@@ -92,7 +97,6 @@
   (delete-other-windows)
   (let ((initial-pattern (helm-ipython-get-initial-pattern))
         (helm-execute-action-at-once-if-one t)
-        help-cand
         (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
     (with-helm-show-completion (- (point) (length initial-pattern)) (point)
       (helm :sources 'helm-source-ipython
