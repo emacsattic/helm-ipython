@@ -85,7 +85,8 @@
            helm-ipython--last-help-candidate
            (string= candidate helm-ipython--last-help-candidate))
       (kill-buffer helm-ipython-help-buffer)
-      (let ((doc (helm-ipython-docstring candidate)))
+      (let ((doc (helm-ipython-docstring candidate))
+            (inhibit-read-only t))
         (with-current-buffer (get-buffer-create helm-ipython-help-buffer)
           (erase-buffer)
           (save-excursion (insert doc))
