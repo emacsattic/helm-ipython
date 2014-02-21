@@ -1,6 +1,6 @@
 ;;; helm-ipython.el --- python completion using ipython and helm. -*- lexical-binding: t -*-
 
-;; Copyright (C) <Thierry Volpiatto>thierry.volpiatto@gmail.com
+;; Copyright (C) 2012 ~ 2014 <Thierry Volpiatto>thierry.volpiatto@gmail.com
 
 ;; Author: Thierry Volpiatto
 
@@ -35,6 +35,18 @@
 (require 'python)
 (require 'helm-elisp) ; For `with-helm-show-completion'
 
+(defgroup helm-ipython nil
+  "Helm python completion."
+  :group 'helm)
+
+(defcustom helm-ipython-docstring-fm-cmd "help(%s)"
+  "Python command to get docstring from interpreter."
+  :group 'helm-ipython
+  :type 'string)
+
+;;; Internal
+(defvar helm-ipython--last-help-candidate nil)
+(make-local-variable 'helm-ipython--last-help-candidate)
 (defvar helm-ipython-help-buffer "*helm ipython help*")
 
 (defun helm-ipython-completion-list (pattern)
@@ -56,7 +68,8 @@
   '((name . "Ipython completion")
     (candidates . (lambda ()
                     (helm-ipython-completion-list helm-pattern)))
-    (action . helm-ipyton-default-action)
+    (action . (("Insert" . helm-ipyton-default-action)
+               ("Show info" . helm-ipython-help)))
     (persistent-action . helm-ipython-help)
     (persistent-help . "Get info on object")
     (volatile)
@@ -65,11 +78,7 @@
 (defun helm-ipython-docstring (candidate)
   (with-helm-current-buffer
     (python-shell-send-string-no-output
-     (format "help(%s)" candidate))))
-
-;; Internal
-(defvar helm-ipython--last-help-candidate nil)
-(make-local-variable 'helm-ipython--last-help-candidate)
+     (format helm-ipython-docstring-fm-cmd candidate))))
 
 (defun helm-ipython-help (candidate)
   (if (and (get-buffer-window helm-ipython-help-buffer 'visible)
@@ -81,7 +90,8 @@
           (erase-buffer)
           (save-excursion (insert doc))
           (setq helm-ipython--last-help-candidate candidate)
-          (display-buffer (current-buffer))))))
+          (view-mode 1)
+          (pop-to-buffer (current-buffer))))))
 
 (defun helm-ipython-get-initial-pattern ()
   "Get the pattern to complete from."
