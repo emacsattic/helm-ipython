@@ -65,7 +65,7 @@
 (defun helm-ipython-docstring (candidate)
   (with-helm-current-buffer
     (python-shell-send-string-no-output
-     (format "help(\"%s\")" candidate))))
+     (format "help(%s)" candidate))))
 
 ;; Internal
 (defvar helm-ipython--last-help-candidate nil)
