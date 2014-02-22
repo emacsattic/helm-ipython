@@ -24,7 +24,7 @@
 
 ;; Commentary:
 ;;
-;; Works only in Emacs-24.2
+;; Works only in Emacs-24.2+
 ;; Need Ipython and rlcompleter2
 ;; See Ipython installation in python.el source file
 ;; or documentation.
@@ -64,16 +64,32 @@
     (delete-char (- (length initial-pattern)))
     (insert elm)))
 
+(defvar helm-ipython-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "<right>") 'helm-yank-selection)
+    (define-key map (kbd "<left>") 'helm-ipython-previous-level)
+    map))
+
 (defvar helm-source-ipython
-  '((name . "Ipython completion")
+  `((name . "Ipython completion")
     (candidates . (lambda ()
                     (helm-ipython-completion-list helm-pattern)))
     (action . (("Insert" . helm-ipyton-default-action)
                ("Show info" . helm-ipython-help)))
     (persistent-action . helm-ipython-help)
     (persistent-help . "Get info on object")
+    (keymap . ,helm-ipython-map)
     (volatile)
     (requires-pattern . 2)))
+
+(defun helm-ipython-previous-level ()
+  (interactive)
+  (helm-set-pattern
+   (concat
+    (mapconcat 'identity
+               (butlast (split-string helm-pattern "\\." t)) ".")
+    ".")))
 
 (defun helm-ipython-docstring (candidate)
   (with-helm-current-buffer
