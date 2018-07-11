@@ -117,6 +117,7 @@
         (end (point)))
     (buffer-substring-no-properties beg end)))
 
+;;;###autoload
 (defun helm-ipython-complete ()
   "Preconfigured helm for ipython completions."
   (interactive)
@@ -129,6 +130,7 @@
             :input initial-pattern
             :buffer "*helm ipython*"))))
 
+;;;###autoload
 (defun helm-ipython-import-modules-from-buffer ()
   "Allow user to execute only the import lines of the current *.py file."
   (interactive)
