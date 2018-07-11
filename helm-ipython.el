@@ -49,13 +49,13 @@
 (make-local-variable 'helm-ipython--last-help-candidate)
 (defvar helm-ipython-help-buffer "*helm ipython help*")
 
-(defun helm-ipython-completion-list (pattern)
+(defun helm-ipython-completion-list ()
   (condition-case nil
       (with-helm-current-buffer
         (python-shell-completion-get-completions
          (python-shell-get-process)
          python-shell-completion-string-code
-         pattern))
+         helm-pattern))
     (error nil)))
 
 (defun helm-ipyton-default-action (elm)
@@ -72,16 +72,15 @@
     map))
 
 (defvar helm-source-ipython
-  `((name . "Ipython completion")
-    (candidates . (lambda ()
-                    (helm-ipython-completion-list helm-pattern)))
-    (action . (("Insert" . helm-ipyton-default-action)
-               ("Show info" . helm-ipython-help)))
-    (persistent-action . helm-ipython-help)
-    (persistent-help . "Get info on object")
-    (keymap . ,helm-ipython-map)
-    (volatile)
-    (requires-pattern . 2)))
+  (helm-build-sync-source "Ipython completion"
+    :candidates 'helm-ipython-completion-list
+    :action '(("Insert" . helm-ipyton-default-action)
+              ("Show info" . helm-ipython-help))
+    :persistent-action 'helm-ipython-help
+    :persistent-help "Get info on object"
+    :keymap helm-ipython-map
+    :volatile t
+    :requires-pattern 2))
 
 (defun helm-ipython-previous-level ()
   (interactive)
