@@ -54,8 +54,7 @@
       (with-helm-current-buffer
         (python-shell-completion-get-completions
          (python-shell-get-process)
-         python-shell-completion-string-code
-         helm-pattern))
+         nil helm-pattern))
     (error nil)))
 
 (defun helm-ipyton-default-action (elm)
