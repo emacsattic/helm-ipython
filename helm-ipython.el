@@ -4,7 +4,9 @@
 
 ;; Author: Thierry Volpiatto
 
-;; Keywords: ipython, python, completion. 
+;; Keywords: ipython, python, completion.
+
+;; Package-Requires: ((helm "1.7.8"))
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -24,10 +26,28 @@
 
 ;; Commentary:
 ;;
-;; Works only in Emacs-24.2+
-;; Need Ipython and rlcompleter2
+;; 
+;; Need a recent emacs (26), Ipython and rlcompleter2.
 ;; See Ipython installation in python.el source file
 ;; or documentation.
+;; For rlcompleter2 you need to disable verbosity to avoid the welcome
+;; message in helm-buffer at each update, here a basic configuration
+;; for python.el that fit with this package:
+;;
+;;    (setq
+;;         gud-pdb-command-name "ipdb"
+;;         python-shell-interpreter "ipython"
+;;         python-shell-interpreter-args "-i --autoindent"
+;;         python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;;         python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;;         python-shell-completion-setup-code
+;;         "import rlcompleter2
+;;    rlcompleter2.setup(histfn=None, button='tab',verbose=None)
+;;    from IPython.core.completerlib import module_completion"
+;;         python-shell-completion-module-string-code
+;;         "';'.join(module_completion('''%s'''))\n"
+;;         python-shell-completion-string-code
+;;         "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
 ;;; Code:
 
