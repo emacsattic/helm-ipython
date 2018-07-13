@@ -144,15 +144,9 @@
   (with-current-buffer (current-buffer)
     (save-excursion
       (goto-char (point-min))
-      (catch 'break
-        (while (not (eobp))
-          (catch 'continue
-            (if (re-search-forward "^\\s-*\\(import\\|from\\)\\s-+" (point-max) t)
-                (progn
-                  (sit-for 0.1)
-                  (python-shell-send-region (point-at-bol) (point-at-eol))
-                  (throw 'continue nil))
-                (throw 'break nil)))))))
+      (while (re-search-forward "^\\s-*\\(import\\|from\\)\\s-+" (point-max) t)
+        (python-shell-send-region (point-at-bol) (point-at-eol))
+        (sit-for 0.1))))
   (message "All imports from `%s' done" (buffer-name)))
   
 (provide 'helm-ipython)
