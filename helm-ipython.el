@@ -1,6 +1,6 @@
 ;;; helm-ipython.el --- python completion using ipython and helm. -*- lexical-binding: t -*-
 
-;; Copyright (C) 2012 ~ 2014 <Thierry Volpiatto>thierry.volpiatto@gmail.com
+;; Copyright (C) 2012 ~ 2018 <Thierry Volpiatto>thierry.volpiatto@gmail.com
 
 ;; Author: Thierry Volpiatto
 
