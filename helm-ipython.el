@@ -6,7 +6,7 @@
 
 ;; Keywords: ipython, python, completion.
 
-;; Package-Requires: ((helm "1.7.8"))
+;; Package-Requires: ((helm "1.7.8") (emacs "25"))
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -27,7 +27,8 @@
 ;; Commentary:
 ;;
 ;; 
-;; Need a recent emacs (26), Ipython and rlcompleter2.
+;; Need a recent emacs (25+), Ipython and rlcompleter2 you will find at
+;; <https://pypi.org/project/rlcompleter2>.
 ;; See Ipython installation in python.el source file
 ;; or documentation.
 ;; For rlcompleter2 you need to disable verbosity to avoid the welcome
