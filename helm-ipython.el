@@ -24,31 +24,18 @@
 ;; Floor, Boston, MA 02110-1301, USA.
 ;; 
 
-;; Commentary:
+;;; Commentary:
 ;;
 ;; 
-;; Need a recent emacs (25+), Ipython and rlcompleter2 you will find at
-;; <https://pypi.org/project/rlcompleter2>.
-;; See Ipython installation in python.el source file
-;; or documentation.
-;; For rlcompleter2 you need to disable verbosity to avoid the welcome
-;; message in helm-buffer at each update, here a basic configuration
-;; for python.el that fit with this package:
+;; This package is called helm-ipython because initially it needed
+;; Ipython and ipython.el as dependency.  Now it is working with default
+;; python.el configuration and no other dependencies but it is working
+;; also with Ipython, in this case you will have to modify your
+;; python.el configuration like this:
 ;;
-;;    (setq
-;;         gud-pdb-command-name "ipdb"
-;;         python-shell-interpreter "ipython"
-;;         python-shell-interpreter-args "-i --autoindent"
-;;         python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;;         python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;;         python-shell-completion-setup-code
-;;         "import rlcompleter2
-;;    rlcompleter2.setup(histfn=None, button='tab',verbose=None)
-;;    from IPython.core.completerlib import module_completion"
-;;         python-shell-completion-module-string-code
-;;         "';'.join(module_completion('''%s'''))\n"
-;;         python-shell-completion-string-code
-;;         "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+;;    (setq python-shell-interpreter "ipython"
+;;          python-shell-interpreter-args "-i")
+
 
 ;;; Code:
 
