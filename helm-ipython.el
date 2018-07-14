@@ -128,26 +128,28 @@
 (defun helm-ipython-complete ()
   "Preconfigured helm for ipython completions."
   (interactive)
-  (delete-other-windows)
-  (let ((initial-pattern (helm-ipython-get-initial-pattern))
-        (helm-execute-action-at-once-if-one t)
-        (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
-    (with-helm-show-completion (- (point) (length initial-pattern)) (point)
-      (helm :sources 'helm-source-ipython
-            :input initial-pattern
-            :buffer "*helm ipython*"))))
+  (when (or (eq major-mode 'python-mode)
+            (eq major-mode 'inferior-python-mode))
+    (let ((initial-pattern (helm-ipython-get-initial-pattern))
+          (helm-execute-action-at-once-if-one t)
+          (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
+      (with-helm-show-completion (- (point) (length initial-pattern)) (point)
+        (helm :sources 'helm-source-ipython
+              :input initial-pattern
+              :buffer "*helm ipython*")))))
 
 ;;;###autoload
 (defun helm-ipython-import-modules-from-buffer ()
   "Allow user to execute only the import lines of the current *.py file."
   (interactive)
-  (with-current-buffer (current-buffer)
+  (when (or (eq major-mode 'python-mode)
+            (eq major-mode 'inferior-python-mode))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward "^\\s-*\\(import\\|from\\)\\s-+" (point-max) t)
         (python-shell-send-region (point-at-bol) (point-at-eol))
-        (sit-for 0.1))))
-  (message "All imports from `%s' done" (buffer-name)))
+        (sit-for 0.1)))
+    (message "All imports from `%s' done" (buffer-name))))
   
 (provide 'helm-ipython)
 
