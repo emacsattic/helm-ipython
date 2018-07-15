@@ -133,10 +133,11 @@
     (let ((initial-pattern (helm-ipython-get-initial-pattern))
           (helm-execute-action-at-once-if-one t)
           (helm-quit-if-no-candidate (lambda () (message "[No match]"))))
-      (with-helm-show-completion (- (point) (length initial-pattern)) (point)
-        (helm :sources 'helm-source-ipython
-              :input initial-pattern
-              :buffer "*helm ipython*")))))
+      (unless (string= initial-pattern "")
+        (with-helm-show-completion (- (point) (length initial-pattern)) (point)
+          (helm :sources 'helm-source-ipython
+                :input initial-pattern
+                :buffer "*helm ipython*"))))))
 
 ;;;###autoload
 (defun helm-ipython-import-modules-from-buffer ()
